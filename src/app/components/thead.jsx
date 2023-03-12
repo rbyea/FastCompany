@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import Arrow from "./arrow";
 
 const Thead = ({ onSort, selectedSort, columns }) => {
-    console.log(selectedSort);
     const handleSort = (title) => {
         if (selectedSort.path === title) {
             onSort({

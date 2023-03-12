@@ -7,6 +7,10 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+* {
+    box-sizing: border-box;
+}
+
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
         monospace;
@@ -31,13 +35,14 @@ code {
 }
 
 .filter-list li:first-child {
-border-left: 1px solid rgba(0, 0, 0, 0.125);
+    border-left: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 .btn-filter {
     width: 150px;
 }
 body {
+    color: #fff;
     background-color: #263238;
 }
 
@@ -59,4 +64,29 @@ body {
     position: relative;
     margin-left: 3px;
     top: 2px;
+}
+
+.users-link {
+    color: #fff;
+    position: relative;
+    text-decoration: none;
+}
+
+.users-link:before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    width: 0;
+    transition: all .4s ease;
+    height: 1px;
+    background-color: #fff;
+}
+.users-link:hover {
+    color: #fff;
+}
+
+.users-link:hover::before {
+    width: 100%;
 }

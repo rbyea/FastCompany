@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import { paginate } from "../utils/paginate";
 import Pagination from "./pagination";
 import api from "../api";
@@ -15,10 +14,6 @@ const Users = () => {
     const [sortBy, setSortBy] = React.useState({ path: null, order: "asc" });
     const pageSize = 5;
 
-    const [users, setUsers] = useState();
-    useEffect(() => {
-        api.users.fetchAll().then((data) => setUsers(data));
-    }, []);
     const handleDelete = (userId) => {
         setUsers(users.filter((user) => user._id !== userId));
     };
@@ -32,6 +27,12 @@ const Users = () => {
             })
         );
     };
+
+    const [users, setUsers] = useState();
+
+    useEffect(() => {
+        api.users.fetchAll().then((data) => setUsers(data));
+    }, []);
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data));
@@ -73,7 +74,7 @@ const Users = () => {
         };
 
         return (
-            <div className="wrapper wrapper_large">
+            <>
                 <SearchStatus length={count} />
                 {professions && (
                     <div className="d-flex flex-shrink-0 mt-3">
@@ -110,13 +111,10 @@ const Users = () => {
                         />
                     </div>
                 </div>
-            </div>
+            </>
         );
     }
     return "loading...";
-};
-Users.propTypes = {
-    users: PropTypes.array
 };
 
 export default Users;

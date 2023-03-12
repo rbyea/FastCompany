@@ -3,32 +3,52 @@ import PropTypes from "prop-types";
 import BookMark from "./bookmark";
 import Qualities from "./qualitiesList";
 import Table from "./table";
+import TableUserName from "./TableUserName";
 
-const UsersTable = ({ users, onSort, onToggleBookMark, onDelete, selectedSort, ...rest }) => {
+const UsersTable = ({
+    users,
+    onSort,
+    onToggleBookMark,
+    onDelete,
+    selectedSort,
+    ...rest
+}) => {
     const columns = {
-        name: { path: "name", name: "Имя" },
-        qualities: {
-            name: "Качество",
+        name: {
+            path: "name",
+            name: "Имя",
             component: (user) => (
-                <Qualities qualities={user.qualities}/>
+                <TableUserName user={user} />
             )
         },
+        qualities: {
+            name: "Качество",
+            component: (user) => <Qualities qualities={user.qualities} />
+        },
         profession: { path: "profession.name", name: "Профессия" },
-        completedMeetings: { path: "completedMeetings", name: "Встретился, раз" },
+        completedMeetings: {
+            path: "completedMeetings",
+            name: "Встретился, раз"
+        },
         rate: { path: "rate", name: "Оценка" },
         bookmark: {
             path: "bookmark",
             name: "Избранное",
             component: (user) => (
                 <BookMark
-                    status={ user.bookmark }
-                    onClick={ () => onToggleBookMark(user._id) }
+                    status={user.bookmark}
+                    onClick={() => onToggleBookMark(user._id)}
                 />
             )
         },
         delete: {
             component: (user) => (
-                <button className="btn btn-danger" onClick={() => onDelete(user._id)}>Удалить</button>
+                <button
+                    className="btn btn-danger"
+                    onClick={() => onDelete(user._id)}
+                >
+                    Удалить
+                </button>
             )
         }
     };
