@@ -114,7 +114,7 @@ const Users = () => {
             </>
         );
     }
-    return "loading...";
+    return "Загрузка...";
 };
 
 export default Users;

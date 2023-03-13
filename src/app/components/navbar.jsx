@@ -15,7 +15,7 @@ const Navbar = () => {
                 Главная
             </Link>
             <Link className={`nav-link ${pathClass("/login")}`} to="/login">
-                Логин
+                Вход
             </Link>
             <Link className={`nav-link ${pathClass("/users")}`} to="/users">
                 Пользователи

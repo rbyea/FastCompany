@@ -90,3 +90,27 @@ body {
 .users-link:hover::before {
     width: 100%;
 }
+
+.card {
+    max-width: 500px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    color: #222
+}
+
+.card-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.card-wrap p {
+    margin-right: 20px;
+}
+
+.card-wrap p:last-child {
+    margin-right: 0;
+}
+.card-list .badge {
+    width: 100%;
+}
