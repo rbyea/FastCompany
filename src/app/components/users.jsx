@@ -4,6 +4,7 @@ import Pagination from "./pagination";
 import api from "../api";
 import GroupList from "./groupList";
 import SearchStatus from "./searchStatus";
+import SearchInput from "./searchInput";
 import UsersTable from "./usersTable";
 import _ from "lodash";
 
@@ -12,6 +13,8 @@ const Users = () => {
     const [professions, setProfession] = useState();
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = React.useState({ path: null, order: "asc" });
+    const [searchUser, setSearchUser] = useState("");
+
     const pageSize = 5;
 
     const handleDelete = (userId) => {
@@ -42,6 +45,7 @@ const Users = () => {
     }, [selectedProf]);
 
     const handleProfessionSelect = (item) => {
+        setSearchUser("");
         setSelectedProf(item);
     };
 
@@ -53,6 +57,12 @@ const Users = () => {
         setSortBy(item);
     };
 
+    const inputSearch = (e) => {
+        const { target } = e;
+        setSelectedProf("");
+        setSearchUser(target.value.toLowerCase());
+    };
+
     if (users) {
         const filteredUsers = selectedProf
             ? users.filter(
@@ -62,9 +72,16 @@ const Users = () => {
               )
             : users;
 
-        const count = filteredUsers.length;
+        const searchUsers =
+            searchUser.length > 0
+                ? filteredUsers.filter((user) =>
+                      user.name.toLowerCase().includes(searchUser)
+                  )
+                : filteredUsers;
+
+        const count = searchUsers.length;
         const sortedUsers = _.orderBy(
-            filteredUsers,
+            searchUsers,
             [sortBy.path],
             [sortBy.order]
         );
@@ -92,6 +109,12 @@ const Users = () => {
                         </button>
                     </div>
                 )}
+
+                <SearchInput
+                    searchUser={searchUser}
+                    inputSearch={inputSearch}
+                />
+
                 <div className="d-flex flex-column">
                     {count > 0 && (
                         <UsersTable
