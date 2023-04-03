@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./components/navbar";
+import Navbar from "./components/ui/navbar";
 import { Route, Switch } from "react-router-dom";
 import Main from "./layouts/main";
 import Login from "./layouts/login";
@@ -13,8 +13,8 @@ function App() {
                 <div className="wrapper wrapper_large">
                     <Switch>
                         <Route exact path="/" component={Main} />
-                        <Route path="/login" component={Login}/>
-                        <Route path="/users/:paramsId?" component={MainUsers} />
+                        <Route path="/login/:type?" component={Login}/>
+                        <Route path="/users/:paramsId?/:edit?" component={MainUsers} />
                     </Switch>
                 </div>
             </div>

@@ -4,8 +4,12 @@ import PropTypes from "prop-types";
 function TextField({ label, type, value, onChange, placeholder, name, error }) {
     const [eye, setEye] = React.useState(false);
 
+    const handleChange = ({ target }) => {
+        onChange({ name: target.name, value: target.value });
+    };
+
     const toggleShowEye = () => {
-        setEye(prevState => !prevState);
+        setEye((prevState) => !prevState);
     };
 
     return (
@@ -20,7 +24,7 @@ function TextField({ label, type, value, onChange, placeholder, name, error }) {
                     }
                     type={eye ? "text" : type}
                     value={value}
-                    onChange={onChange}
+                    onChange={handleChange}
                     placeholder={placeholder}
                     name={name}
                 />

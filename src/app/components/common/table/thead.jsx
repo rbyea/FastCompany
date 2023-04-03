@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Arrow from "./arrow";
+import Arrow from "../arrow";
 
 const Thead = ({ onSort, selectedSort, columns }) => {
     const handleSort = (title) => {

@@ -41,8 +41,8 @@ code {
 .btn-filter {
     width: 150px;
 }
+
 body {
-    color: #fff;
     background-color: #263238;
 }
 
@@ -125,6 +125,7 @@ body {
 .form-block .form-label {
     width: 100%;
     position: relative;
+    color: #fff;
 }
 
 .eye-item {
@@ -141,4 +142,58 @@ body {
 
 .eye-item i:before {
     color: #000;
+}
+
+.label-width {
+    width: 100%;
+}
+
+.input-radio-descr {
+    display: block;
+}
+
+.form-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.form-wrap .form-check {
+    margin-right: 10px;
+}
+
+.form-wrap label {
+    cursor: pointer;
+}
+
+.form-wrap .form-check:last-child {
+    margin-right: 0;
+}
+
+body .qualities__control .qualities__menu {
+    color: #000 !important;
+}
+
+h1,h2,button,span {
+    color: #fff;
+}
+
+.bi.bi-bookmark {
+    color: #000;
+}
+
+.bi.bi-bookmark-heart-fill {
+    color: #000;
+}
+
+.card-title {
+    color: #000 !important
+}
+
+.card-wrap {
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-wrap button {
+    flex: 1;
 }

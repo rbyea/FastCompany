@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
-import UserIcon from "../assets/user.png";
+import UserIcon from "../../../assets/user.png";
 import { useHistory } from "react-router-dom";
-import api from "../api";
+import api from "../../../api";
 import PropTypes from "prop-types";
 
-const UserItem = ({ paramsId }) => {
+const UserPage = ({ paramsId }) => {
     const history = useHistory();
     const [userId, setUserId] = useState();
 
     useEffect(() => {
         api.users.getById(paramsId).then((data) => setUserId(data));
-    });
+    }, []);
 
     const onHandleLink = () => {
+        history.push(`/users/${paramsId}/edit`);
+    };
+
+    const onHandleBack = () => {
         history.push("/users");
     };
 
@@ -32,7 +36,6 @@ const UserItem = ({ paramsId }) => {
                         </p>
 
                         <div className="card-wrap">
-                            {userId.qualities.map((el) => console.log(el))}
                             <p>
                                 <strong>Проведено встреч:</strong>{" "}
                                 {userId.completedMeetings}
@@ -52,12 +55,19 @@ const UserItem = ({ paramsId }) => {
                             </li>
                         ))}
                     </ul>
-                    <div className="card-body">
+                    <div className="card-body card-wrap">
                         <button
                             onClick={onHandleLink}
                             className="btn btn-primary card-link"
                         >
-                            Вернуться назад
+                            Редактировать
+                        </button>
+
+                        <button
+                            onClick={onHandleBack}
+                            className="btn btn-primary card-link"
+                        >
+                            Все пользователи
                         </button>
                     </div>
                 </div>
@@ -67,8 +77,8 @@ const UserItem = ({ paramsId }) => {
     return "Загрузка...";
 };
 
-UserItem.propTypes = {
+UserPage.propTypes = {
     paramsId: PropTypes.string
 };
 
-export default UserItem;
+export default UserPage;
