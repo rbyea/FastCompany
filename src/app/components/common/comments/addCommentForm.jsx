@@ -3,18 +3,13 @@ import PropTypes from "prop-types";
 import SelectField from "../form/selectField";
 import TextareaField from "../form/textareaField";
 import { validator } from "../../../utils/validator";
-import { useParams } from "react-router-dom";
 import API from "../../../api";
+const initialData = { userId: "", content: "" };
 
 const AddCommentForm = ({ onSubmit }) => {
-    const { paramsId } = useParams();
     const [users, setUsers] = React.useState({});
     const [error, setError] = React.useState({});
-    const [data, setData] = React.useState({
-        pageId: paramsId || "",
-        userId: "",
-        content: ""
-    });
+    const [data, setData] = React.useState(initialData);
 
     React.useEffect(() => {
         API.users.fetchAll().then((data) => {
@@ -58,16 +53,16 @@ const AddCommentForm = ({ onSubmit }) => {
         }));
     };
 
+    const clearForm = () => {
+        setData(initialData);
+        setError({});
+    };
     const handleSubmit = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
         onSubmit(data);
-        setData((prevState) => ({
-            ...prevState,
-            userId: "",
-            content: ""
-        }));
+        clearForm();
     };
 
     const arrayOfUsers =
