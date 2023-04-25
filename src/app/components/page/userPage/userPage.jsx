@@ -1,77 +1,73 @@
 import React, { useEffect, useState } from "react";
-import UserIcon from "../../../assets/user.png";
-import { useHistory } from "react-router-dom";
 import api from "../../../api";
 import PropTypes from "prop-types";
+import UserCard from "../../ui/userCard";
+import QualitiesCard from "../../ui/qualitiesCard";
+import MeetingsCard from "../../ui/meetingsCard";
+import Comments from "../../ui/comments";
 
 const UserPage = ({ paramsId }) => {
-    const history = useHistory();
-    const [userId, setUserId] = useState();
+    const [userParams, setUserParams] = useState();
 
     useEffect(() => {
-        api.users.getById(paramsId).then((data) => setUserId(data));
+        api.users.getById(paramsId).then((data) => {
+            setUserParams(data);
+        });
     }, []);
 
-    const onHandleLink = () => {
-        history.push(`/users/${paramsId}/edit`);
-    };
-
-    const onHandleBack = () => {
-        history.push("/users");
-    };
-
-    if (userId) {
+    if (userParams) {
         return (
-            <>
-                <div className="card">
-                    <img
-                        src={UserIcon}
-                        className="card-img-top"
-                        alt={userId.name}
-                    />
-                    <div className="card-body">
-                        <h2 className="card-title">{userId.name}</h2>
-                        <p className="card-text">
-                            <strong>Профессия:</strong> {userId.profession.name}
-                        </p>
-
-                        <div className="card-wrap">
-                            <p>
-                                <strong>Проведено встреч:</strong>{" "}
-                                {userId.completedMeetings}
-                            </p>
-                            <p>
-                                <strong>Рейтинг пользователя:</strong>{" "}
-                                {userId.rate}
-                            </p>
-                        </div>
+            <div className="container">
+                <div className="row gutters-sm">
+                    <div className="col-md-4 md-3">
+                        <UserCard user={userParams} />
+                        <QualitiesCard data={userParams.qualities} />
+                        <MeetingsCard value={userParams.completedMeetings} />
                     </div>
-                    <ul className="list-group list-group-flush card-list">
-                        {userId.qualities.map((el) => (
-                            <li className="list-group-item" key={el._id}>
-                                <span className={`badge bg-${el.color}`}>
-                                    {el.name}
-                                </span>
-                            </li>
-                        ))}
-                    </ul>
-                    <div className="card-body card-wrap">
-                        <button
-                            onClick={onHandleLink}
-                            className="btn btn-primary card-link"
-                        >
-                            Редактировать
-                        </button>
+                    <div className="col-md-8">
+                        <Comments />
 
-                        <button
-                            onClick={onHandleBack}
-                            className="btn btn-primary card-link"
-                        >
-                            Все пользователи
-                        </button>
+                        {/* <div className="card mb-3">
+                                <div className="card-body">
+                                    <h2>Комментарии</h2>
+                                    <hr />
+
+                                    {sortedComments.length > 0 ? (
+                                        sortedComments.map((comment) => {
+                                            const user = users.find(
+                                                (user) =>
+                                                    user.value ===
+                                                    comment.userId
+                                            );
+                                            return (
+                                                <div key={comment.created_at}>
+                                                    <UserComment
+                                                        createdAt={
+                                                            comment.created_at
+                                                        }
+                                                        handleDeleteComment={
+                                                            handleDeleteComment
+                                                        }
+                                                        randomNumbers={
+                                                            randomNumber
+                                                        }
+                                                        handleLinkUser={
+                                                            handleLinkUser
+                                                        }
+                                                        user={user}
+                                                        comment={comment}
+                                                    />
+                                                </div>
+                                            );
+                                        })
+                                    ) : (
+                                        <h2>Новых комментарий пока нет</h2>
+                                    )}
+                                </div>
+                            </div> */}
                     </div>
                 </div>
-            </>
+            </div>
         );
     }
     return "Загрузка...";

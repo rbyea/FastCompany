@@ -3,7 +3,7 @@ import Navbar from "./components/ui/navbar";
 import { Route, Switch } from "react-router-dom";
 import Main from "./layouts/main";
 import Login from "./layouts/login";
-import MainUsers from "./layouts/usersPage";
+import MainUsers from "./layouts/mainUsers";
 
 function App() {
     return (
@@ -13,8 +13,11 @@ function App() {
                 <div className="wrapper wrapper_large">
                     <Switch>
                         <Route exact path="/" component={Main} />
-                        <Route path="/login/:type?" component={Login}/>
-                        <Route path="/users/:paramsId?/:edit?" component={MainUsers} />
+                        <Route path="/login/:type?" component={Login} />
+                        <Route
+                            path="/users/:paramsId?/:edit?"
+                            component={MainUsers}
+                        />
                     </Switch>
                 </div>
             </div>
