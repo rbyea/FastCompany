@@ -7,6 +7,7 @@ import SearchStatus from "../../common/form/searchStatus";
 import SearchInput from "../../searchInput";
 import UsersTable from "../../usersTable";
 import _ from "lodash";
+import { useUser } from "../../../hooks/useUser";
 
 const UsersListPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,25 +18,23 @@ const UsersListPage = () => {
 
     const pageSize = 5;
 
+    const { users } = useUser();
+
     const handleDelete = (userId) => {
-        setUsers(users.filter((user) => user._id !== userId));
+        // setUsers(users.filter((user) => user._id !== userId));
+        console.log(userId);
     };
     const handleToggleBookMark = (id) => {
-        setUsers(
-            users.map((user) => {
-                if (user._id === id) {
-                    return { ...user, bookmark: !user.bookmark };
-                }
-                return user;
-            })
-        );
+        const newArray = users.map((user) => {
+            if (user._id === id) {
+                return { ...user, bookmark: !user.bookmark };
+            }
+            return user;
+        });
+
+        // setUsers();
+        console.log(newArray);
     };
-
-    const [users, setUsers] = useState();
-
-    useEffect(() => {
-        api.users.fetchAll().then((data) => setUsers(data));
-    }, []);
 
     useEffect(() => {
         api.professions.fetchAll().then((data) => setProfession(data));

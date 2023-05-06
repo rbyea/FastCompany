@@ -26,45 +26,6 @@ const UserPage = ({ paramsId }) => {
                     </div>
                     <div className="col-md-8">
                         <Comments />
-
-                        {/* <div className="card mb-3">
-                                <div className="card-body">
-                                    <h2>Комментарии</h2>
-                                    <hr />
-
-                                    {sortedComments.length > 0 ? (
-                                        sortedComments.map((comment) => {
-                                            const user = users.find(
-                                                (user) =>
-                                                    user.value ===
-                                                    comment.userId
-                                            );
-                                            return (
-                                                <div key={comment.created_at}>
-                                                    <UserComment
-                                                        createdAt={
-                                                            comment.created_at
-                                                        }
-                                                        handleDeleteComment={
-                                                            handleDeleteComment
-                                                        }
-                                                        randomNumbers={
-                                                            randomNumber
-                                                        }
-                                                        handleLinkUser={
-                                                            handleLinkUser
-                                                        }
-                                                        user={user}
-                                                        comment={comment}
-                                                    />
-                                                </div>
-                                            );
-                                        })
-                                    ) : (
-                                        <h2>Новых комментарий пока нет</h2>
-                                    )}
-                                </div>
-                            </div> */}
                     </div>
                 </div>
             </div>

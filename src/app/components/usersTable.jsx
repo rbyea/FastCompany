@@ -4,6 +4,7 @@ import BookMark from "./common/bookmark";
 import Qualities from "./ui/qualities/qualitiesList";
 import Table from "./common/table/table";
 import TableUserName from "./common/table/TableUserName";
+import Profession from "./ui/profession";
 
 const UsersTable = ({
     users,
@@ -17,15 +18,16 @@ const UsersTable = ({
         name: {
             path: "name",
             name: "Имя",
-            component: (user) => (
-                <TableUserName user={user} />
-            )
+            component: (user) => <TableUserName user={user} />
         },
         qualities: {
             name: "Качество",
             component: (user) => <Qualities qualities={user.qualities} />
         },
-        profession: { path: "profession.name", name: "Профессия" },
+        profession: {
+            name: "Профессия",
+            component: (user) => <Profession id={user.profession} />
+        },
         completedMeetings: {
             path: "completedMeetings",
             name: "Встретился, раз"

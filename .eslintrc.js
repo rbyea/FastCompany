@@ -26,6 +26,7 @@ module.exports = {
             {
                 allowTemplateLiterals: true
             }
-        ]
+        ],
+        "object-shorthand": 0
     }
 };

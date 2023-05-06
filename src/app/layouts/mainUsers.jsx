@@ -3,6 +3,7 @@ import UsersListPage from "../components/page/userListPage";
 import UserPage from "../components/page/userPage";
 import { useParams } from "react-router-dom";
 import RefreshUser from "../components/ui/RefreshUser";
+import UserProvider from "../hooks/useUser";
 
 const MainUsers = () => {
     const params = useParams();
@@ -10,15 +11,17 @@ const MainUsers = () => {
 
     return (
         <>
-            {paramsId ? (
-                edit ? (
-                    <RefreshUser paramsId={paramsId}/>
+            <UserProvider>
+                {paramsId ? (
+                    edit ? (
+                        <RefreshUser paramsId={paramsId} />
+                    ) : (
+                        <UserPage paramsId={paramsId} />
+                    )
                 ) : (
-                    <UserPage paramsId={paramsId} />
-                )
-            ) : (
-                <UsersListPage />
-            )}
+                    <UsersListPage />
+                )}
+            </UserProvider>
         </>
     );
 };
