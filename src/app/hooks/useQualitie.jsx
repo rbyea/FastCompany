@@ -11,7 +11,7 @@ export const useQualitie = () => {
 
 export const QualitieProvider = ({ children }) => {
     const [isLoading, setLoading] = React.useState(true);
-    const [qualitie, setQualitie] = React.useState([]);
+    const [qualities, setQualitie] = React.useState([]);
     const [error, setError] = React.useState(null);
     React.useEffect(() => {
         if (error !== null) {
@@ -35,7 +35,7 @@ export const QualitieProvider = ({ children }) => {
     }
 
     function getQualitie(id) {
-        return qualitie.find((qual) => qual._id === id);
+        return qualities.find((qual) => qual._id === id);
     }
 
     function errorCatcher(error) {
@@ -44,7 +44,7 @@ export const QualitieProvider = ({ children }) => {
     }
 
     return (
-        <QualitieContext.Provider value={{ qualitie, isLoading, getQualitie }}>
+        <QualitieContext.Provider value={{ qualities, isLoading, getQualitie }}>
             {children}
         </QualitieContext.Provider>
     );

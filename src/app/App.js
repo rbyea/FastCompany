@@ -8,10 +8,12 @@ import { ToastContainer } from "react-toastify";
 import { ProfessionProvider } from "./hooks/useProffesion";
 import { QualitieProvider } from "./hooks/useQualitie";
 import "react-toastify/dist/ReactToastify.css";
+import AuthProvider from "./hooks/useAuth";
 
 function App() {
     return (
         <>
+            <AuthProvider>
             <Navbar />
             <QualitieProvider>
                 <ProfessionProvider>
@@ -29,6 +31,7 @@ function App() {
                     </div>
                 </ProfessionProvider>
             </QualitieProvider>
+            </AuthProvider>
             <ToastContainer />
         </>
     );

@@ -1,33 +1,15 @@
 import React from "react";
 import { validator } from "../../utils/validator";
 import TextField from "../common/form/textField";
-import api from "../../api";
 import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckboxField from "../common/form/checkboxField";
+import { useQualitie } from "../../hooks/useQualitie";
+import { useProfessions } from "../../hooks/useProffesion";
+import { useAuth } from "../../hooks/useAuth";
 
 const RegistrationForm = () => {
-    const [qualities, setQualities] = React.useState([]);
-    const [professions, setProfession] = React.useState([]);
-    React.useEffect(() => {
-        api.professions.fetchAll().then((data) => {
-            const professionsList = Object.keys(data).map((professionName) => ({
-                label: data[professionName].name,
-                value: data[professionName]._id
-            }));
-            setProfession(professionsList);
-        });
-        api.qualities.fetchAll().then((data) => {
-            const qualitiesList = Object.keys(data).map((optionName) => ({
-                label: data[optionName].name,
-                value: data[optionName]._id,
-                color: data[optionName].color
-            }));
-            setQualities(qualitiesList);
-        });
-    }, []);
-
     const [data, setData] = React.useState({
         email: "",
         password: "",
@@ -36,6 +18,20 @@ const RegistrationForm = () => {
         qualities: [],
         license: false
     });
+
+    const { singUp } = useAuth();
+
+    const { qualities } = useQualitie();
+    const qualitiesList = qualities.map((q) => ({
+        value: q._id,
+        label: q.name
+    }));
+
+    const { professions } = useProfessions();
+    const professionsList = professions.map((q) => ({
+        value: q._id,
+        label: q.name
+    }));
 
     const [error, setError] = React.useState({});
 
@@ -96,22 +92,11 @@ const RegistrationForm = () => {
     };
 
     const isValid = Object.keys(error).length === 0;
-    const onSubmitForm = (e) => {
-        e.preventDefault();
-        const isValid = validate();
-        if (!isValid) return;
-        const { profession, qualities } = data;
-        console.log({
-            ...data,
-            profession: getProfessionById(profession),
-            qualities: getQualities(qualities)
-        });
-    };
 
     const getProfessionById = (id) => {
         for (const prof of professions) {
-            if (prof.value === id) {
-                return { _id: prof.value, name: prof.label };
+            if (prof._id === id) {
+                return prof._id;
             }
         }
     };
@@ -119,84 +104,99 @@ const RegistrationForm = () => {
         const qualitiesArray = [];
         for (const elem of elements) {
             for (const quality in qualities) {
-                if (elem.value === qualities[quality].value) {
-                    qualitiesArray.push({
-                        _id: qualities[quality].value,
-                        name: qualities[quality].label,
-                        color: qualities[quality].color
-                    });
+                if (elem.value === qualities[quality]._id) {
+                    qualitiesArray.push(qualities[quality]._id);
                 }
             }
         }
         return qualitiesArray;
     };
 
-    return (
-        <form onSubmit={onSubmitForm}>
-            <TextField
-                error={error.email}
-                label="Почта"
-                type="text"
-                value={data.email}
-                onChange={handleChange}
-                placeholder="Введите почту"
-                name="email"
-            />
-            <TextField
-                error={error.password}
-                label="Пароль"
-                type="password"
-                value={data.password}
-                onChange={handleChange}
-                placeholder="Введите пароль"
-                name="password"
-            />
+    const onSubmitForm = (e) => {
+        e.preventDefault();
+        const isValid = validate();
+        if (!isValid) return;
+        const { profession, qualities } = data;
 
-            <SelectField
-                label="Выберите Вашу профессию"
-                name="profession"
-                value={data.profession}
-                onChange={handleChange}
-                professions={professions}
-                error={error.profession}
-            />
+        const newData = {
+            ...data,
+            profession: getProfessionById(profession),
+            qualities: getQualities(qualities)
+        };
 
-            <RadioField
-                label="Выберите ваш пол"
-                options={[
-                    { name: "Муж.", value: "male" },
-                    { name: "Жен.", value: "female" }
-                ]}
-                name="sex"
-                value={data.sex}
-                onChange={handleChange}
-            />
-            <MultiSelectField
-                options={qualities}
-                name="qualities"
-                defaulValue={data.qualities}
-                label="Выберите ваши качества"
-                onChange={handleChange}
-            />
+        singUp(newData);
+    };
 
-            <CheckboxField
-                name="license"
-                value={data.license}
-                onChange={handleChange}
-                error={error.license}
-            >
-                Подтвердить <a href="#">лицензионное соглашение</a>
-            </CheckboxField>
+    if (qualities.length > 0 && professions.length > 0) {
+        return (
+            <form onSubmit={onSubmitForm}>
+                <TextField
+                    error={error.email}
+                    label="Почта"
+                    type="text"
+                    value={data.email}
+                    onChange={handleChange}
+                    placeholder="Введите почту"
+                    name="email"
+                />
+                <TextField
+                    error={error.password}
+                    label="Пароль"
+                    type="password"
+                    value={data.password}
+                    onChange={handleChange}
+                    placeholder="Введите пароль"
+                    name="password"
+                />
 
-            <button
-                type="submit"
-                disabled={!isValid}
-                className="btn btn-primary"
-            >
-                Регистрация
-            </button>
-        </form>
-    );
+                <SelectField
+                    label="Выберите Вашу профессию"
+                    name="profession"
+                    value={data.profession}
+                    onChange={handleChange}
+                    professions={professionsList}
+                    error={error.profession}
+                />
+
+                <RadioField
+                    label="Выберите ваш пол"
+                    options={[
+                        { name: "Муж.", value: "male" },
+                        { name: "Жен.", value: "female" }
+                    ]}
+                    name="sex"
+                    value={data.sex}
+                    onChange={handleChange}
+                />
+                <MultiSelectField
+                    options={qualitiesList}
+                    name="qualities"
+                    defaulValue={data.qualities}
+                    label="Выберите ваши качества"
+                    onChange={handleChange}
+                />
+
+                <CheckboxField
+                    name="license"
+                    value={data.license}
+                    onChange={handleChange}
+                    error={error.license}
+                >
+                    Подтвердить <a href="#">лицензионное соглашение</a>
+                </CheckboxField>
+
+                <button
+                    type="submit"
+                    disabled={!isValid}
+                    className="btn btn-primary"
+                >
+                    Регистрация
+                </button>
+            </form>
+        );
+    } else {
+        return <h2>Загрузка...</h2>;
+    }
 };
 
 export default RegistrationForm;
