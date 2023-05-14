@@ -8,8 +8,12 @@ import CheckboxField from "../common/form/checkboxField";
 import { useQualitie } from "../../hooks/useQualitie";
 import { useProfessions } from "../../hooks/useProffesion";
 import { useAuth } from "../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RegistrationForm = () => {
+    const history = useHistory();
+
     const [data, setData] = React.useState({
         email: "",
         password: "",
@@ -112,7 +116,7 @@ const RegistrationForm = () => {
         return qualitiesArray;
     };
 
-    const onSubmitForm = (e) => {
+    const onSubmitForm = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
@@ -124,7 +128,15 @@ const RegistrationForm = () => {
             qualities: getQualities(qualities)
         };
 
-        singUp(newData);
+        try {
+            await singUp(newData);
+            history.push("/");
+            toast.success("Регистрация успешно завершена!");
+        } catch (error) {
+            setError(error);
+
+            console.log(error);
+        }
     };
 
     if (qualities.length > 0 && professions.length > 0) {

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 
 const SelectField = ({ label, name, value, onChange, professions, error }) => {
     const handleChange = ({ target }) => {
-        console.log("select", target.name, target.value);
         onChange({ name: target.name, value: target.value });
     };
 
@@ -15,8 +14,6 @@ const SelectField = ({ label, name, value, onChange, professions, error }) => {
         !Array.isArray(professions) && typeof professions === "object"
             ? Object.values(professions)
             : professions;
-
-            console.log("professions", professions);
     return (
         <div className="mb-3">
             <label className="label-width form-label">

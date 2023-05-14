@@ -6,8 +6,11 @@ const userService = {
         const { data } = await httpService.get(userEndpoint);
         return data;
     },
-    getSingleUser: async (id) => {
-        const { data } = await httpService.get(userEndpoint + id);
+    create: async (payload) => {
+        const { data } = await httpService.put(
+            userEndpoint + payload._id,
+            payload
+        );
         return data;
     }
 };
