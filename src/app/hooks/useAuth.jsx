@@ -34,7 +34,6 @@ const AuthProvider = ({ children }) => {
 
             const { code, message } = error.response.data.error;
             if (code === 400 && message === "EMAIL_EXISTS") {
-                console.log(true);
                 const errorObject = {
                     email: "Пользователь с такой почтой уже существует"
                 };
@@ -43,9 +42,53 @@ const AuthProvider = ({ children }) => {
         }
     }
 
+    async function singIn({ email, password }) {
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.REACT_APP_FIREBASE_KEY}`;
+
+        try {
+            const { data } = await httpAuth.post(url, {
+                email,
+                password,
+                returnSecureToken: true
+            });
+            console.log(data);
+            await userJoin(data);
+        } catch (error) {
+            console.log("error", error);
+            const { code, message } = error.response.data.error;
+
+            if (code === 400) {
+                if (message === "EMAIL_NOT_FOUND") {
+                    const emailFoundObject = {
+                        email: "Неверно введена почта"
+                    };
+
+                    throw emailFoundObject;
+                }
+
+                if (message === "INVALID_PASSWORD") {
+                    const passwordFoundObject = {
+                        password: "Неверно введен пароль"
+                    };
+
+                    throw passwordFoundObject;
+                }
+            }
+        }
+    }
+
     async function createUser(data) {
         try {
             const { content } = await userService.create(data);
+            setUser(content);
+        } catch (error) {
+            errorCatcher(error);
+        }
+    }
+
+    async function userJoin(data) {
+        try {
+            const { content } = await userService.get(data);
             setUser(content);
         } catch (error) {
             errorCatcher(error);
@@ -65,7 +108,7 @@ const AuthProvider = ({ children }) => {
     }
 
     return (
-        <AuthContext.Provider value={{ singUp, currentUser }}>
+        <AuthContext.Provider value={{ singUp, currentUser, singIn }}>
             {children}
         </AuthContext.Provider>
     );

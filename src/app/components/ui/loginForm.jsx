@@ -2,10 +2,16 @@ import React from "react";
 import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
 import * as yup from "yup";
+import { useAuth } from "../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
+    const { singIn } = useAuth();
     const [data, setData] = React.useState({ email: "", password: "" });
     const [error, setError] = React.useState({});
+
+    const history = useHistory();
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -13,34 +19,6 @@ const LoginForm = () => {
             [target.name]: target.value
         }));
     };
-
-    // const validatorConfig = {
-    //     email: {
-    //         isRequired: {
-    //             message: "Электронная почта обязательна для заполнения!"
-    //         },
-    //         isEmail: {
-    //             message: "Почта введена некорректно"
-    //         }
-    //     },
-    //     password: {
-    //         isRequired: {
-    //             message: "Пароль обязателен для заполнения!"
-    //         },
-    //         isCapitalSymbol: {
-    //             message: "Пароль должен содержать хотя бы одну заглвную букву!"
-    //         },
-
-    //         isContainDigit: {
-    //             message: "Пароль должен содержать хотя бы одно число!"
-    //         },
-
-    //         min: {
-    //             message: "Пароль должен состоять минимум из 8 символов",
-    //             value: 8
-    //         }
-    //     }
-    // };
 
     const validateScheme = yup.object().shape({
         password: yup
@@ -51,10 +29,6 @@ const LoginForm = () => {
                 "Пароль должен содержать хотя бы одну заглвную букву!"
             )
             .matches(/\d+/g, "Пароль должен содержать хотя бы одно число!")
-            .matches(
-                /(?=.*[!@#$%^&*])/,
-                "Пароль должен содержать один из специльных смполов !@$%^&*"
-            )
             .matches(
                 /(?=.{8,})/,
                 "Пароль должен состоять минимум из 8 символов"
@@ -76,16 +50,21 @@ const LoginForm = () => {
             .validate(data)
             .then(() => setError({}))
             .catch((err) => setError({ [err.path]: err.message }));
-        // setError(errors);
         return Object.keys(errors).length === 0;
     };
 
     const isValid = Object.keys(error).length === 0;
-    const onSubmitForm = (e) => {
+    const onSubmitForm = async (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        console.log(data);
+        try {
+            await singIn(data);
+            history.push("/");
+            toast.success("Вы вошли!");
+        } catch (error) {
+            setError(error);
+        }
     };
     return (
         <form onSubmit={onSubmitForm}>
