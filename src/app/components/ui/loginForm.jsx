@@ -4,7 +4,6 @@ import { validator } from "../../utils/validator";
 import * as yup from "yup";
 import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
 
 const LoginForm = () => {
     const { singIn } = useAuth();
@@ -21,22 +20,10 @@ const LoginForm = () => {
     };
 
     const validateScheme = yup.object().shape({
-        password: yup
-            .string()
-            .required("Пароль обязателен для заполнения!")
-            .matches(
-                /[A-Z]+/g,
-                "Пароль должен содержать хотя бы одну заглвную букву!"
-            )
-            .matches(/\d+/g, "Пароль должен содержать хотя бы одно число!")
-            .matches(
-                /(?=.{8,})/,
-                "Пароль должен состоять минимум из 8 символов"
-            ),
+        password: yup.string().required("Пароль обязателен для заполнения!"),
         email: yup
             .string()
             .required("Электронная почта обязательна для заполнения!")
-            .email("Почта введена некорректно")
     });
 
     React.useEffect(() => {
@@ -60,8 +47,11 @@ const LoginForm = () => {
         if (!isValid) return;
         try {
             await singIn(data);
-            history.push("/");
-            toast.success("Вы вошли!");
+            history.push(
+                history.location.state
+                    ? history.location.state.form.pathname
+                    : "/"
+            );
         } catch (error) {
             setError(error);
         }

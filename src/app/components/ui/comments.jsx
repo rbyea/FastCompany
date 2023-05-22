@@ -1,43 +1,28 @@
 import React from "react";
-import { useParams } from "react-router-dom";
-import api from "../../api";
 import _ from "lodash";
 import CommentsList, { AddCommentForm } from "../common/comments";
+import { useComments } from "../../hooks/useComments";
 
 const Comments = () => {
-    const { paramsId } = useParams();
-    const [comments, setComments] = React.useState([]);
-
-    console.log(comments);
-
-    console.log("userId", paramsId);
-
-    React.useEffect(() => {
-        api.comments
-            .fetchCommentsForUser(paramsId)
-            .then((data) => {
-                setComments(data);
-            })
-            .catch((error) => {
-                console.error("Ошибка загрузки комментариев:", error);
-            });
-    }, []);
+    const { createComments, comments, removeComment } = useComments();
 
     const onSubmitForm = (data) => {
-        api.comments
-            .add({ ...data, pageId: paramsId })
-            .then((data) => setComments([...comments, data]));
+        createComments(data);
+
+        // api.comments
+        //     .add({ ...data, pageId: paramsId })
+        //     .then((data) => setComments([...comments, data]));
     };
 
     const handleDeleteComment = (id) => {
-        api.comments.remove(id).then((id) => {
-            setComments(comments.filter((person) => person._id !== id));
-        });
+        removeComment(id);
+        // api.comments.remove(id).then((id) => {
+        //     setComments(comments.filter((person) => person._id !== id));
+        // });
     };
 
     const sortedComments = _.orderBy(comments, ["created_at"], ["desc"]);
 
-    console.log(sortedComments.length);
     return (
         <>
             <div className="card mb-2">

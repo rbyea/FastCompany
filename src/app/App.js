@@ -9,28 +9,34 @@ import { ProfessionProvider } from "./hooks/useProffesion";
 import { QualitieProvider } from "./hooks/useQualitie";
 import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./hooks/useAuth";
+import ProtectedRoute from "./components/common/protectedRoute";
+import LogOut from "./layouts/logOut";
 
 function App() {
     return (
         <>
             <AuthProvider>
-            <Navbar />
-            <QualitieProvider>
-                <ProfessionProvider>
-                    <div className="section section_default">
-                        <div className="wrapper wrapper_large">
-                            <Switch>
-                                <Route exact path="/" component={Main} />
-                                <Route path="/login/:type?" component={Login} />
-                                <Route
-                                    path="/users/:paramsId?/:edit?"
-                                    component={MainUsers}
-                                />
-                            </Switch>
+                <Navbar />
+                <QualitieProvider>
+                    <ProfessionProvider>
+                        <div className="section section_default">
+                            <div className="wrapper wrapper_large">
+                                <Switch>
+                                    <Route exact path="/" component={Main} />
+                                    <Route path="/logout" component={LogOut} />
+                                    <Route
+                                        path="/login/:type?"
+                                        component={Login}
+                                    />
+                                    <ProtectedRoute
+                                        path="/users/:paramsId?/:edit?"
+                                        component={MainUsers}
+                                    />
+                                </Switch>
+                            </div>
                         </div>
-                    </div>
-                </ProfessionProvider>
-            </QualitieProvider>
+                    </ProfessionProvider>
+                </QualitieProvider>
             </AuthProvider>
             <ToastContainer />
         </>

@@ -19,6 +19,7 @@ const RegistrationForm = () => {
         password: "",
         profession: "",
         sex: "male",
+        name: "",
         qualities: [],
         license: false
     });
@@ -53,6 +54,15 @@ const RegistrationForm = () => {
             },
             isEmail: {
                 message: "Почта введена некорректно"
+            }
+        },
+        name: {
+            isRequired: {
+                message: "Имя обязательно для заполнения!"
+            },
+            min: {
+                message: "Имя должено состоять минимум из 3 символов",
+                value: 3
             }
         },
         password: {
@@ -142,6 +152,15 @@ const RegistrationForm = () => {
     if (qualities.length > 0 && professions.length > 0) {
         return (
             <form onSubmit={onSubmitForm}>
+                <TextField
+                    error={error.name}
+                    label="Имя"
+                    type="text"
+                    value={data.name}
+                    onChange={handleChange}
+                    placeholder="Введите имя"
+                    name="name"
+                />
                 <TextField
                     error={error.email}
                     label="Почта"

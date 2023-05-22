@@ -235,3 +235,42 @@ h1,h2,button,span {
 .main-content {
     color: #fff;
 }
+
+.nav-user {
+    color: #fff;
+    margin: 0 20px;
+    font-size: 16px !important;
+    white-space: normal;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.nav-user img {
+    margin-right: 10px;
+}
+
+.nav-user .dropdown-toggle::after {
+    top: 2px;
+    position: relative;
+}
+
+.header-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-wrapper nav {
+    width: calc(100% - 250px);
+}
+
+.header-wrapper .nav-profile {
+    width: 250px;
+}
+
+.header-wrapper .nav-full {
+    width: 100%;
+}
