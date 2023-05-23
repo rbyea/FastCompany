@@ -15,9 +15,6 @@ const Comment = ({
     const { currentUser } = useAuth();
     const user = getUserId(userId);
 
-    console.log(currentUser);
-
-    console.log("id", userId);
     return (
         <div className="bg-dark card-body mb-3">
             <div className="row">

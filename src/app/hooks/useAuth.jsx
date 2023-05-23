@@ -155,9 +155,25 @@ const AuthProvider = ({ children }) => {
         setError(message);
     }
 
+    async function updateProfileUser(data) {
+        console.log(data);
+        try {
+            const { content } = await userService.updateUser(data);
+            console.log(content);
+        } catch (error) {
+            errorCatcher(error);
+        }
+    }
+
     return (
         <AuthContext.Provider
-            value={{ singUp, currentUser, singIn, removeAllTokens }}
+            value={{
+                singUp,
+                currentUser,
+                singIn,
+                removeAllTokens,
+                updateProfileUser
+            }}
         >
             {!isLoading ? (
                 children
