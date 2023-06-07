@@ -5,16 +5,28 @@ import MultiSelectField from "../common/form/multiSelectField";
 import RadioField from "../common/form/radioField";
 import { validator } from "../../utils/validator";
 import { useHistory, useParams } from "react-router-dom";
-import { useProfessions } from "../../hooks/useProffesion";
-import { useQualitie } from "../../hooks/useQualitie";
 import { useAuth } from "../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import {
+    getQualitiesList,
+    getQualitiesLoadingStatus
+} from "../../store/qualities";
+import {
+    getLoadingProffesionsStatus,
+    getProffesionsList
+} from "../../store/proffesions";
 
 const RefreshUser = () => {
+    const [data, setData] = React.useState();
+
     const history = useHistory();
     const { paramsId } = useParams();
-    const { professions, isLoading: isLoadingProf } = useProfessions();
-    const { qualities, isLoading: isLoadingQual, getQualitie } = useQualitie();
+    const professions = useSelector(getProffesionsList());
+    const isLoadingProf = useSelector(getLoadingProffesionsStatus());
+    const qualities = useSelector(getQualitiesList());
+    const isLoadingQual = useSelector(getQualitiesLoadingStatus());
     const { currentUser, updateProfileUser } = useAuth();
+    const [isLoading, setIsLoading] = React.useState(true);
 
     const profListUser = professions.map((p) => ({
         label: p.name,
@@ -26,13 +38,21 @@ const RefreshUser = () => {
         value: q._id
     }));
 
-    const [data, setData] = React.useState({
-        name: currentUser.name,
-        email: currentUser.email,
-        profession: currentUser.profession,
-        sex: currentUser.sex,
-        qualities: getQualitieUser(currentUser.qualities)
-    });
+    const getQualitieUser = (qualitiIds) => {
+        const resultArray = [];
+        for (const ids of qualitiIds) {
+            for (const quality of qualities) {
+                if (ids === quality._id) {
+                    resultArray.push({
+                        label: quality.name,
+                        value: quality._id
+                    });
+                    break;
+                }
+            }
+        }
+        return resultArray;
+    };
 
     const [error, setError] = React.useState({});
 
@@ -89,7 +109,17 @@ const RefreshUser = () => {
 
     React.useEffect(() => {
         validate();
+        if (data && isLoading) setIsLoading(false);
     }, [data]);
+
+    React.useEffect(() => {
+        if (!isLoadingProf && !isLoadingQual && currentUser && !data) {
+            setData({
+                ...currentUser,
+                qualities: getQualitieUser(currentUser.qualities)
+            });
+        }
+    }, [isLoadingProf, isLoadingQual, currentUser, data]);
 
     const validate = () => {
         const errors = validator(data, validatorConfig);
@@ -102,41 +132,30 @@ const RefreshUser = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        // const { profession, qualities } = data;
-        // api.users.update(paramsId, {
-        //     ...data,
-        //     profession: getProfessionById(profession),
-        //     qualities: getQualities(qualities)
-        // });
-
-        try {
-            await updateProfileUser({
-                ...data,
-                qualities: data.qualities.map((qual) => qual.value)
-            });
-            history.push(`/users/${paramsId}`);
-        } catch (error) {
-            console.log(error);
-        }
+        await updateProfileUser({
+            ...data,
+            qualities: data.qualities.map((qual) => qual.value)
+        });
+        history.push(`/users/${paramsId}`);
     };
 
-    function getQualitieUser(elements) {
-        const qualitiesArray = [];
-        for (const elem of elements) {
-            const qualElem = getQualitie(elem);
-            qualitiesArray.push({
-                label: qualElem.name,
-                value: qualElem._id
-            });
-        }
-        return qualitiesArray;
-    }
+    // function getQualitieUser(elements) {
+    //     const qualitiesArray = [];
+    //     for (const elem of elements) {
+    //         const qualElem = getQualitie(elem);
+    //         qualitiesArray.push({
+    //             label: qualElem.name,
+    //             value: qualElem._id
+    //         });
+    //     }
+    //     return qualitiesArray;
+    // }
 
     const onHandleBack = () => {
         history.push(`/users/${paramsId}`);
     };
 
-    if (!isLoadingProf && !isLoadingQual) {
+    if (!isLoading && !isLoadingProf && !isLoadingQual) {
         return (
             <div className="container form-block card">
                 <h2>Изменить пользователя</h2>

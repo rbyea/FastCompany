@@ -51,8 +51,6 @@ export const CommentsProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-
-        console.log(comment);
     }
 
     async function getComments() {

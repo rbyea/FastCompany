@@ -5,15 +5,21 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckboxField from "../common/form/checkboxField";
-import { useQualitie } from "../../hooks/useQualitie";
-import { useProfessions } from "../../hooks/useProffesion";
 import { useAuth } from "../../hooks/useAuth";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import {
+    getQualitiesList,
+    getQualitiesLoadingStatus
+} from "../../store/qualities";
+import {
+    getLoadingProffesionsStatus,
+    getProffesionsList
+} from "../../store/proffesions";
 
 const RegistrationForm = () => {
     const history = useHistory();
-
     const [data, setData] = React.useState({
         email: "",
         password: "",
@@ -26,13 +32,15 @@ const RegistrationForm = () => {
 
     const { singUp } = useAuth();
 
-    const { qualities } = useQualitie();
+    const qualities = useSelector(getQualitiesList());
+    const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
     const qualitiesList = qualities.map((q) => ({
         value: q._id,
         label: q.name
     }));
 
-    const { professions } = useProfessions();
+    const professions = useSelector(getProffesionsList());
+    const professionsLoading = useSelector(getLoadingProffesionsStatus());
     const professionsList = professions.map((q) => ({
         value: q._id,
         label: q.name
@@ -149,7 +157,9 @@ const RegistrationForm = () => {
         }
     };
 
-    if (qualities.length > 0 && professions.length > 0) {
+    console.log(professions);
+
+    if (!qualitiesLoading && !professionsLoading) {
         return (
             <form onSubmit={onSubmitForm}>
                 <TextField
