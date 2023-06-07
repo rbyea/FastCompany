@@ -49,7 +49,6 @@ export const getQualitiesLoadingStatus = () => (state) =>
 
 export const getQualitibyId = (qualitiesId) => (state) => {
     const newArray = [];
-
     for (const qualId of qualitiesId) {
         for (const quality of state.qualities.entities) {
             if (qualId === quality._id) {

@@ -4,16 +4,14 @@ import professionService from "../services/proffession.service";
 const proffesionsSlice = createSlice({
     name: "proffesion",
     initialState: {
-        entities: [],
+        entities: null,
         isLoading: true,
-        error: null,
-        lastFetch: null
+        error: null
     },
     reducers: {
         proffesionReceved: (state, action) => {
             state.entities = action.payload;
             state.isLoading = false;
-            state.lastFetch = Date.now();
         },
         proffesionRequested: (state) => {
             state.isLoading = true;
@@ -28,24 +26,13 @@ const proffesionsSlice = createSlice({
 const { actions, reducer: proffesionsReducer } = proffesionsSlice;
 const { proffesionReceved, proffesionRequested, proffesionRequestFailed } =
     actions;
-
-function isOutDated(date) {
-    if (Date.now() - date > 10 * 60 * 1000) {
-        return true;
-    }
-    return false;
-}
-
 export const loadProffesionsList = () => async (dispatch, getState) => {
-    const { lastFetch } = getState().proffesions;
-    if (isOutDated(lastFetch)) {
-        dispatch(proffesionRequested());
-        try {
-            const { content } = await professionService.get();
-            dispatch(proffesionReceved(content));
-        } catch (error) {
-            dispatch(proffesionRequestFailed(error.message));
-        }
+    dispatch(proffesionRequested());
+    try {
+        const { content } = await professionService.get();
+        dispatch(proffesionReceved(content));
+    } catch (error) {
+        dispatch(proffesionRequestFailed(error.message));
     }
 };
 
@@ -61,8 +48,6 @@ export const getProffesionById = (proffsionId) => (state) => {
             break;
         }
     }
-
-    console.log(proffesionArray);
 
     return proffesionArray;
 };
