@@ -5,10 +5,8 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import CheckboxField from "../common/form/checkboxField";
-import { useAuth } from "../../hooks/useAuth";
-import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+// import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
 import {
     getQualitiesList,
     getQualitiesLoadingStatus
@@ -17,9 +15,10 @@ import {
     getLoadingProffesionsStatus,
     getProffesionsList
 } from "../../store/proffesions";
+import { signUp } from "../../store/users";
 
 const RegistrationForm = () => {
-    const history = useHistory();
+    const dispatch = useDispatch();
     const [data, setData] = React.useState({
         email: "",
         password: "",
@@ -29,8 +28,6 @@ const RegistrationForm = () => {
         qualities: [],
         license: false
     });
-
-    const { singUp } = useAuth();
 
     const qualities = useSelector(getQualitiesList());
     const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
@@ -134,7 +131,7 @@ const RegistrationForm = () => {
         return qualitiesArray;
     };
 
-    const onSubmitForm = async (e) => {
+    const onSubmitForm = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
@@ -146,18 +143,9 @@ const RegistrationForm = () => {
             qualities: getQualities(qualities)
         };
 
-        try {
-            await singUp(newData);
-            history.push("/");
-            toast.success("Регистрация успешно завершена!");
-        } catch (error) {
-            setError(error);
-
-            console.log(error);
-        }
+        dispatch(signUp(newData));
+        // toast.success("Регистрация успешно завершена!");
     };
-
-    console.log(professions);
 
     if (!qualitiesLoading && !professionsLoading) {
         return (

@@ -9,21 +9,11 @@ import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./hooks/useAuth";
 import ProtectedRoute from "./components/common/protectedRoute";
 import LogOut from "./layouts/logOut";
-import { useDispatch } from "react-redux";
-import { loadQualitiesList } from "./store/qualities";
-import { loadProffesionsList } from "./store/proffesions";
-import { loadUsersList } from "./store/users";
+import AppLoader from "./components/ui/hoc/appLoader";
 
 function App() {
-    const dispatch = useDispatch();
-    React.useEffect(() => {
-        dispatch(loadQualitiesList());
-        dispatch(loadProffesionsList());
-        dispatch(loadUsersList());
-    }, []);
-
     return (
-        <>
+        <AppLoader>
             <AuthProvider>
                 <Navbar />
                 <div className="section section_default">
@@ -41,7 +31,7 @@ function App() {
                 </div>
             </AuthProvider>
             <ToastContainer />
-        </>
+        </AppLoader>
     );
 }
 

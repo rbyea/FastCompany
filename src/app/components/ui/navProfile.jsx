@@ -1,14 +1,17 @@
 import React from "react";
-import { useAuth } from "../../hooks/useAuth";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getCurrentUserData } from "../../store/users";
 
 const NavProfile = () => {
     const [isShow, setIsShow] = React.useState(false);
-    const { currentUser } = useAuth();
+    const currentUser = useSelector(getCurrentUserData());
 
     const handleClick = () => {
         setIsShow((prevState) => !prevState);
     };
+
+    if (!currentUser) return "Загрузка...";
 
     return (
         <div className="nav-profile dropdown" onClick={handleClick}>

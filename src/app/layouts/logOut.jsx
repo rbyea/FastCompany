@@ -1,11 +1,12 @@
 import React from "react";
-import { useAuth } from "../hooks/useAuth";
+import { useDispatch } from "react-redux";
+import { logOut } from "../store/users";
 
 const LogOut = () => {
-    const { removeAllTokens } = useAuth();
+    const dispatch = useDispatch();
 
     React.useEffect(() => {
-        removeAllTokens();
+        dispatch(logOut());
     }, []);
 
     return <h1>Загрузка...</h1>;

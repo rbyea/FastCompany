@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { timeMessage } from "../../../utils/timeComment";
-import { useUser } from "../../../hooks/useUser";
-import { useAuth } from "../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { getCurrentUserId, getUserId } from "../../../store/users";
 
 const Comment = ({
     content,
@@ -11,10 +11,10 @@ const Comment = ({
     userId,
     onRemove
 }) => {
-    const { getUserId } = useUser();
-    const { currentUser } = useAuth();
-    const user = getUserId(userId);
+    const currentUserId = useSelector(getCurrentUserId());
+    const user = useSelector(getUserId(userId));
 
+    if (!user) return "Загрузка...";
     return (
         <div className="bg-dark card-body mb-3">
             <div className="row">
@@ -40,7 +40,7 @@ const Comment = ({
                                             {timeMessage(created)}
                                         </span>
                                     </p>
-                                    {currentUser._id === userId && (
+                                    {currentUserId === userId && (
                                         <button
                                             onClick={() => onRemove(id)}
                                             className="btn btn-sm text-primary d-flex align-items-center"

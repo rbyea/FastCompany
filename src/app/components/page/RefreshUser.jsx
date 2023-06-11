@@ -5,8 +5,8 @@ import MultiSelectField from "../common/form/multiSelectField";
 import RadioField from "../common/form/radioField";
 import { validator } from "../../utils/validator";
 import { useHistory, useParams } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import { useSelector } from "react-redux";
+// import { useAuth } from "../../hooks/useAuth";
+import { useDispatch, useSelector } from "react-redux";
 import {
     getQualitiesList,
     getQualitiesLoadingStatus
@@ -15,6 +15,7 @@ import {
     getLoadingProffesionsStatus,
     getProffesionsList
 } from "../../store/proffesions";
+import { getCurrentUserData, updateUser } from "../../store/users";
 
 const RefreshUser = () => {
     const [data, setData] = React.useState();
@@ -25,7 +26,10 @@ const RefreshUser = () => {
     const isLoadingProf = useSelector(getLoadingProffesionsStatus());
     const qualities = useSelector(getQualitiesList());
     const isLoadingQual = useSelector(getQualitiesLoadingStatus());
-    const { currentUser, updateProfileUser } = useAuth();
+    // const { updateProfileUser } = useAuth();
+    const dispatch = useDispatch();
+
+    const currentUser = useSelector(getCurrentUserData());
     const [isLoading, setIsLoading] = React.useState(true);
 
     const profListUser = professions.map((p) => ({
@@ -132,11 +136,19 @@ const RefreshUser = () => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        await updateProfileUser({
-            ...data,
-            qualities: data.qualities.map((qual) => qual.value)
-        });
-        history.push(`/users/${paramsId}`);
+
+        const redirect = `/users/${paramsId}`;
+        dispatch(
+            updateUser({
+                payload: {
+                    ...data,
+                    qualities: data.qualities.map((qual) => qual.value)
+                },
+                redirect
+            })
+        );
+
+        // history.push(`/users/${paramsId}`);
     };
 
     // function getQualitieUser(elements) {

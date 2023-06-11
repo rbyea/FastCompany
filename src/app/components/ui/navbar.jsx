@@ -1,7 +1,8 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
 import NavProfile from "./navProfile";
+import { useSelector } from "react-redux";
+import { getIsLoggedIn } from "../../store/users";
 
 const Navbar = () => {
     const location = useLocation();
@@ -11,20 +12,20 @@ const Navbar = () => {
         return pathname === path ? "active" : "";
     };
 
-    const { currentUser } = useAuth();
+    const isLoggetIn = useSelector(getIsLoggedIn());
 
     return (
         <div className="header header-wrapper">
             <nav
                 className={`nav nav-pills nav-fill ${
-                    !currentUser ? "nav-full" : ""
+                    !isLoggetIn ? "nav-full" : ""
                 }`}
             >
                 <Link className={`nav-link ${pathClass("/")}`} to="/">
                     Главная
                 </Link>
 
-                {!currentUser && (
+                {!isLoggetIn && (
                     <>
                         <Link
                             className={`nav-link ${pathClass("/login")}`}
@@ -34,7 +35,7 @@ const Navbar = () => {
                         </Link>
                     </>
                 )}
-                {currentUser && (
+                {isLoggetIn && (
                     <Link
                         className={`nav-link ${pathClass("/users")}`}
                         to="/users"
@@ -43,7 +44,7 @@ const Navbar = () => {
                     </Link>
                 )}
             </nav>
-            {currentUser && <NavProfile />}
+            {isLoggetIn && <NavProfile />}
         </div>
     );
 };

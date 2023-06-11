@@ -2,15 +2,16 @@ import React from "react";
 import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
 import * as yup from "yup";
-import { useAuth } from "../../hooks/useAuth";
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/users";
 
 const LoginForm = () => {
-    const { singIn } = useAuth();
     const [data, setData] = React.useState({ email: "", password: "" });
     const [error, setError] = React.useState({});
+    const dispatch = useDispatch();
 
-    const history = useHistory();
+    // const history = useHistory();
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -41,20 +42,13 @@ const LoginForm = () => {
     };
 
     const isValid = Object.keys(error).length === 0;
-    const onSubmitForm = async (e) => {
+    const onSubmitForm = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-        try {
-            await singIn(data);
-            history.push(
-                history.location.state
-                    ? history.location.state.form.pathname
-                    : "/"
-            );
-        } catch (error) {
-            setError(error);
-        }
+
+        const redirect = "/users";
+        dispatch(login({ payload: data, redirect }));
     };
     return (
         <form onSubmit={onSubmitForm}>
