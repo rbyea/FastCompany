@@ -40,7 +40,9 @@ export const getProffesionsList = () => (state) => state.proffesions.entities;
 export const getLoadingProffesionsStatus = () => (state) =>
     state.proffesions.isLoading;
 export const getProffesionById = (proffsionId) => (state) => {
-    return state.proffesions.entities.find((p) => p._id === proffsionId);
+    if (state.proffesions.entities) {
+        return state.proffesions.entities.find((p) => p._id === proffsionId);
+    }
 };
 
 export default proffesionsReducer;

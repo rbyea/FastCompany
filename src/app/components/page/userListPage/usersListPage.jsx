@@ -6,19 +6,26 @@ import SearchStatus from "../../common/form/searchStatus";
 import SearchInput from "../../searchInput";
 import UsersTable from "../../usersTable";
 import _ from "lodash";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     getLoadingProffesionsStatus,
     getProffesionsList
 } from "../../../store/proffesions";
-import { getCurrentUserId, getUsersList } from "../../../store/users";
+import {
+    filteredUsers,
+    getCurrentUserId,
+    getFilteredUsers,
+    getUsersList
+} from "../../../store/users";
 
 const UsersListPage = () => {
+    const dispatch = useDispatch();
+
     const [currentPage, setCurrentPage] = useState(1);
     const currentUserId = useSelector(getCurrentUserId());
     const isloadingProfessions = useSelector(getLoadingProffesionsStatus());
     const professions = useSelector(getProffesionsList());
-
+    const usersFiltered = useSelector(getFilteredUsers());
     const [selectedProf, setSelectedProf] = useState();
     const [sortBy, setSortBy] = React.useState({ path: null, order: "asc" });
     const [searchUser, setSearchUser] = useState("");
@@ -27,10 +34,6 @@ const UsersListPage = () => {
 
     const users = useSelector(getUsersList());
 
-    const handleDelete = (userId) => {
-        // setUsers(users.filter((user) => user._id !== userId));
-        console.log(userId);
-    };
     const handleToggleBookMark = (id) => {
         const newArray = users.map((user) => {
             if (user._id === id) {
@@ -38,8 +41,6 @@ const UsersListPage = () => {
             }
             return user;
         });
-
-        // setUsers();
         console.log(newArray);
     };
 
@@ -50,6 +51,8 @@ const UsersListPage = () => {
     const handleProfessionSelect = (item) => {
         setSearchUser("");
         setSelectedProf(item);
+
+        dispatch(filteredUsers(item));
     };
 
     const handlePageChange = (pageIndex) => {
@@ -74,11 +77,7 @@ const UsersListPage = () => {
                           user.name.toLowerCase().includes(searchUser)
                       )
                     : selectedProf
-                    ? data.filter(
-                          (user) =>
-                              JSON.stringify(user.profession) ===
-                              JSON.stringify(selectedProf)
-                      )
+                    ? usersFiltered
                     : data;
             return searchUsers.filter((u) => u._id !== currentUserId);
         }
@@ -127,7 +126,6 @@ const UsersListPage = () => {
                             users={usersCrop}
                             onSort={handleSort}
                             selectedSort={sortBy}
-                            onDelete={handleDelete}
                             onToggleBookMark={handleToggleBookMark}
                         />
                     )}

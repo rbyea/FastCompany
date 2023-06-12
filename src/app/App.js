@@ -6,7 +6,6 @@ import Login from "./layouts/login";
 import MainUsers from "./layouts/mainUsers";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import AuthProvider from "./hooks/useAuth";
 import ProtectedRoute from "./components/common/protectedRoute";
 import LogOut from "./layouts/logOut";
 import AppLoader from "./components/ui/hoc/appLoader";
@@ -14,22 +13,20 @@ import AppLoader from "./components/ui/hoc/appLoader";
 function App() {
     return (
         <AppLoader>
-            <AuthProvider>
-                <Navbar />
-                <div className="section section_default">
-                    <div className="wrapper wrapper_large">
-                        <Switch>
-                            <Route exact path="/" component={Main} />
-                            <Route path="/logout" component={LogOut} />
-                            <Route path="/login/:type?" component={Login} />
-                            <ProtectedRoute
-                                path="/users/:paramsId?/:edit?"
-                                component={MainUsers}
-                            />
-                        </Switch>
-                    </div>
+            <Navbar />
+            <div className="section section_default">
+                <div className="wrapper wrapper_large">
+                    <Switch>
+                        <Route exact path="/" component={Main} />
+                        <Route path="/logout" component={LogOut} />
+                        <Route path="/login/:type?" component={Login} />
+                        <ProtectedRoute
+                            path="/users/:paramsId?/:edit?"
+                            component={MainUsers}
+                        />
+                    </Switch>
                 </div>
-            </AuthProvider>
+            </div>
             <ToastContainer />
         </AppLoader>
     );

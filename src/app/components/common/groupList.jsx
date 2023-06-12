@@ -16,7 +16,9 @@ const GroupList = ({
                         key={items[item][valueProperty]}
                         className={
                             "list-group-item list-group-item-primary" +
-                            (items[item] === selectedItem ? " list-group-item-light" : "")
+                            (items[item] === selectedItem
+                                ? " list-group-item-light"
+                                : "")
                         }
                         onClick={() => onItemSelect(items[item])}
                         role="button"
@@ -54,7 +56,7 @@ GroupList.propTypes = {
     valueProperty: PropTypes.string.isRequired,
     contentProperty: PropTypes.string.isRequired,
     onItemSelect: PropTypes.func,
-    selectedItem: PropTypes.object
+    selectedItem: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
 };
 
 export default GroupList;

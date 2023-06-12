@@ -5,7 +5,6 @@ import MultiSelectField from "../common/form/multiSelectField";
 import RadioField from "../common/form/radioField";
 import { validator } from "../../utils/validator";
 import { useHistory, useParams } from "react-router-dom";
-// import { useAuth } from "../../hooks/useAuth";
 import { useDispatch, useSelector } from "react-redux";
 import {
     getQualitiesList,
@@ -26,7 +25,6 @@ const RefreshUser = () => {
     const isLoadingProf = useSelector(getLoadingProffesionsStatus());
     const qualities = useSelector(getQualitiesList());
     const isLoadingQual = useSelector(getQualitiesLoadingStatus());
-    // const { updateProfileUser } = useAuth();
     const dispatch = useDispatch();
 
     const currentUser = useSelector(getCurrentUserData());

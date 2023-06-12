@@ -13,7 +13,8 @@ const initialState = localStorageService.getTokenKey()
           error: null,
           auth: { userId: localStorageService.getLocalIdKey() },
           isLoggedIn: true,
-          dataLoader: false
+          dataLoader: false,
+          filter: null
       }
     : {
           entities: null,
@@ -21,7 +22,8 @@ const initialState = localStorageService.getTokenKey()
           error: null,
           auth: null,
           isLoggedIn: false,
-          dataLoader: false
+          dataLoader: false,
+          filter: null
       };
 
 const usersSlice = createSlice({
@@ -67,6 +69,12 @@ const usersSlice = createSlice({
         },
         authRequested: (state) => {
             state.error = null;
+        },
+        usersFiltered: (state, action) => {
+            console.log(action.payload);
+            state.filter = state.entities.filter(
+                (user) => user.profession === action.payload._id
+            );
         }
     }
 });
@@ -78,6 +86,7 @@ const {
     usersReceived,
     authRequestSuccess,
     userLogOut,
+    usersFiltered,
     authRequestFailed,
     userCreated,
     userUpdateProfile
@@ -87,6 +96,7 @@ const authRequested = createAction("users/authRequested");
 const userCreatedRequested = createAction("user/userCreatedRequested");
 const createUserFailed = createAction("user/createUserFailed");
 const updateUserRequested = createAction("user/updateUserRequested");
+const filteredUsersRequested = createAction("user/filteredUsersRequested");
 
 export const signUp =
     ({ email, password, ...rest }) =>
@@ -181,6 +191,11 @@ export const updateUser =
         }
     };
 
+export const filteredUsers = (payload) => (dispatch) => {
+    dispatch(filteredUsersRequested());
+    dispatch(usersFiltered(payload));
+};
+
 export const errorLogin = (payload) => (dispatch) => {
     dispatch(authRequestFailed(payload));
 };
@@ -201,5 +216,5 @@ export const getCurrentUserData = () => (state) => {
         : null;
 };
 export const getLoginAuthError = () => (state) => state.users.error;
-
+export const getFilteredUsers = () => (state) => state.users.filter;
 export default usersReducer;
