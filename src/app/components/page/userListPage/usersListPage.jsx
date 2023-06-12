@@ -15,7 +15,8 @@ import {
     filteredUsers,
     getCurrentUserId,
     getFilteredUsers,
-    getUsersList
+    getUsersList,
+    userBookmark
 } from "../../../store/users";
 
 const UsersListPage = () => {
@@ -35,13 +36,7 @@ const UsersListPage = () => {
     const users = useSelector(getUsersList());
 
     const handleToggleBookMark = (id) => {
-        const newArray = users.map((user) => {
-            if (user._id === id) {
-                return { ...user, bookmark: !user.bookmark };
-            }
-            return user;
-        });
-        console.log(newArray);
+        dispatch(userBookmark(id));
     };
 
     useEffect(() => {

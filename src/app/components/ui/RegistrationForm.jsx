@@ -139,6 +139,7 @@ const RegistrationForm = () => {
 
         const newData = {
             ...data,
+            bookmark: false,
             profession: getProfessionById(profession),
             qualities: getQualities(qualities)
         };

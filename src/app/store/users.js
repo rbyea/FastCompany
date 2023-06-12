@@ -71,10 +71,17 @@ const usersSlice = createSlice({
             state.error = null;
         },
         usersFiltered: (state, action) => {
-            console.log(action.payload);
             state.filter = state.entities.filter(
                 (user) => user.profession === action.payload._id
             );
+        },
+        usersBookmark: (state, action) => {
+            state.entities = state.entities.map((user) => {
+                if (user._id === action.payload) {
+                    return { ...user, bookmark: !user.bookmark };
+                }
+                return user;
+            });
         }
     }
 });
@@ -89,7 +96,8 @@ const {
     usersFiltered,
     authRequestFailed,
     userCreated,
-    userUpdateProfile
+    userUpdateProfile,
+    usersBookmark
 } = actions;
 
 const authRequested = createAction("users/authRequested");
@@ -194,6 +202,10 @@ export const updateUser =
 export const filteredUsers = (payload) => (dispatch) => {
     dispatch(filteredUsersRequested());
     dispatch(usersFiltered(payload));
+};
+
+export const userBookmark = (payload) => (dispatch) => {
+    dispatch(usersBookmark(payload));
 };
 
 export const errorLogin = (payload) => (dispatch) => {
