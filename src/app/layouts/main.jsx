@@ -1,17 +1,19 @@
 import React from "react";
-import useMockData from "../utils/mockData";
+// import useMockData from "../utils/mockData";
 
 const Main = () => {
-    const { error, initialData, status, progressCount } = useMockData();
+    // const { error, initialData, status, progressCount } = useMockData();
 
-    const handleButton = () => {
-        initialData();
-    };
+    // const handleButton = () => {
+    //     initialData();
+    // };
 
     return (
         <div className="main-content">
             <h2>Главная</h2>
-            <h3>Инициализация данных в FireBase</h3>
+
+            <p>Пока пусто</p>
+            {/* <h3>Инициализация данных в FireBase</h3>
             <ul>
                 <li>
                     Статус: <strong>{status}</strong>
@@ -27,7 +29,7 @@ const Main = () => {
             </ul>
             <button onClick={handleButton} className="btn btn-primary">
                 Инициализировать
-            </button>
+            </button> */}
         </div>
     );
 };
