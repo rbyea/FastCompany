@@ -16,6 +16,14 @@ code {
         monospace;
 }
 
+td {
+    vertical-align: middle;
+}
+
+table p {
+    margin-bottom: 0;
+}
+
 .filter-list{
     align-items: center;
     flex-direction: row;
