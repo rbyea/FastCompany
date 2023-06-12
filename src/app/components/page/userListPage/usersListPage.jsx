@@ -116,14 +116,17 @@ const UsersListPage = () => {
                 />
 
                 <div className="d-flex flex-column">
-                    {count > 0 && (
-                        <UsersTable
-                            users={usersCrop}
-                            onSort={handleSort}
-                            selectedSort={sortBy}
-                            onToggleBookMark={handleToggleBookMark}
-                        />
-                    )}
+                    <div className="table-mobile-scroll">
+                        {count > 0 && (
+                            <UsersTable
+                                users={usersCrop}
+                                onSort={handleSort}
+                                selectedSort={sortBy}
+                                onToggleBookMark={handleToggleBookMark}
+                            />
+                        )}
+                    </div>
+
                     <div className="d-flex justify-content-flex-start">
                         <Pagination
                             itemsCount={count}

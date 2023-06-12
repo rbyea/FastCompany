@@ -285,3 +285,28 @@ h1,h2,button,span {
 .header-wrapper .nav-full {
     width: 100%;
 }
+
+@media (max-width: 760px) {
+    .filter-list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .filter-list li {
+        flex: none;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    }
+
+    .list-group-item {
+        width: 50%;
+    }
+
+    .table-mobile-scroll {
+        overflow-x: scroll;
+        width: 100%;
+    }
+
+    .table {
+        width: 827px;
+    }
+}
