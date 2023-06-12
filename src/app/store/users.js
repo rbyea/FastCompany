@@ -4,6 +4,7 @@ import authService from "../services/auth.service";
 import localStorageService from "../services/localStorage.service";
 import getRandomInt from "../utils/getRandomInt";
 import history from "../utils/history";
+import { generationAuthError } from "../utils/generateAuthError";
 
 const initialState = localStorageService.getTokenKey()
     ? {
@@ -59,10 +60,13 @@ const usersSlice = createSlice({
             state.dataLoader = false;
         },
         userUpdateProfile: (state, action) => {
-            console.log(actions.payload);
+            console.log(action.payload);
             state.entities[
                 state.entities.findIndex((u) => u._id === action.payload._id)
             ] = action.payload;
+        },
+        authRequested: (state) => {
+            state.error = null;
         }
     }
 });
@@ -123,7 +127,16 @@ export const login =
             localStorageService.setTokens(data);
 
             history.push(redirect);
-        } catch (error) {}
+        } catch (error) {
+            const { code, message } = error.response.data.error;
+
+            if (code === 400) {
+                const errorMessage = generationAuthError(message);
+                dispatch(authRequestFailed(errorMessage));
+            } else {
+                dispatch(authRequestFailed(generationAuthError(error.message)));
+            }
+        }
     };
 
 export const logOut = () => (dispatch) => {
@@ -168,6 +181,10 @@ export const updateUser =
         }
     };
 
+export const errorLogin = (payload) => (dispatch) => {
+    dispatch(authRequestFailed(payload));
+};
+
 export const getUsersList = () => (state) => state.users.entities;
 export const getLoadingUsersStatus = () => (state) => state.users.isLoading;
 export const getUserId = (id) => (state) => {
@@ -183,5 +200,6 @@ export const getCurrentUserData = () => (state) => {
         ? state.users.entities.find((u) => u._id === state.users.auth.userId)
         : null;
 };
+export const getLoginAuthError = () => (state) => state.users.error;
 
 export default usersReducer;

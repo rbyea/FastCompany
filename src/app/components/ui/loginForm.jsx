@@ -1,17 +1,37 @@
 import React from "react";
 import TextField from "../common/form/textField";
+import { useDispatch, useSelector } from "react-redux";
+import { getLoginAuthError, login } from "../../store/users";
 import { validator } from "../../utils/validator";
-import * as yup from "yup";
-// import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { login } from "../../store/users";
 
 const LoginForm = () => {
     const [data, setData] = React.useState({ email: "", password: "" });
-    const [error, setError] = React.useState({});
+    const enterError = useSelector(getLoginAuthError());
+    const [errors, setErrors] = React.useState({});
     const dispatch = useDispatch();
 
-    // const history = useHistory();
+    const validatorConfig = {
+        email: {
+            isRequired: {
+                message: "Электронная почта обязательна для заполнения"
+            }
+        },
+        password: {
+            isRequired: {
+                message: "Пароль обязателен для заполнения"
+            }
+        }
+    };
+
+    React.useEffect(() => {
+        validate();
+    }, [data]);
+    const validate = () => {
+        const errors = validator(data, validatorConfig);
+        setErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+    const isValid = Object.keys(errors).length === 0;
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -19,41 +39,17 @@ const LoginForm = () => {
             [target.name]: target.value
         }));
     };
-
-    const validateScheme = yup.object().shape({
-        password: yup.string().required("Пароль обязателен для заполнения!"),
-        email: yup
-            .string()
-            .required("Электронная почта обязательна для заполнения!")
-    });
-
-    React.useEffect(() => {
-        validate();
-    }, [data]);
-
-    const validate = () => {
-        const errors = validator(data, validateScheme);
-
-        validateScheme
-            .validate(data)
-            .then(() => setError({}))
-            .catch((err) => setError({ [err.path]: err.message }));
-        return Object.keys(errors).length === 0;
-    };
-
-    const isValid = Object.keys(error).length === 0;
     const onSubmitForm = (e) => {
         e.preventDefault();
         const isValid = validate();
         if (!isValid) return;
-
         const redirect = "/users";
         dispatch(login({ payload: data, redirect }));
     };
     return (
         <form onSubmit={onSubmitForm}>
             <TextField
-                error={error.email}
+                error={errors.email}
                 label="Почта"
                 type="text"
                 value={data.email}
@@ -62,7 +58,7 @@ const LoginForm = () => {
                 name="email"
             />
             <TextField
-                error={error.password}
+                error={errors.password}
                 label="Пароль"
                 type="password"
                 value={data.password}
@@ -70,6 +66,7 @@ const LoginForm = () => {
                 placeholder="Введите пароль"
                 name="password"
             />
+            {enterError && <p className="errorAuth">{enterError}</p>}
             <button
                 type="submit"
                 disabled={!isValid}
